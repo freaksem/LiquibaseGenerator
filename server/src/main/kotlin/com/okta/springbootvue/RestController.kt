@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile
 class RestController(private val liquibaseGenerator: LiquibaseGenerator) {
 
     @PostMapping("/generateLiquibase")
-    fun kek(
+    fun generateLiquibase(
         @RequestParam("file") multipartFile: MultipartFile,
         @RequestParam("tableName") tableName: String,
         @RequestParam("schemaName") schemaName: String,
