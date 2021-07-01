@@ -90,8 +90,7 @@ const GenerateLiquibase = {
     }
   },
 
-  mounted() {
-  },
+  mounted() {},
 
   // computed properties
   // http://vuejs.org/guide/computed.html
