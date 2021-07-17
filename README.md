@@ -1,5 +1,6 @@
 # LiquibaseGenerator
 
+### run bootJar task
 ### Run in docker container
 ```
 Run this commands in client folder:
@@ -10,4 +11,4 @@ Run this commands in server folder:
 docker build -t server .
 docker run -p 9000:9000 -d server
 ```
-####or use docker-compose, but before run bootJar task
+####or use docker-compose 

@@ -26,7 +26,7 @@ class LiquibaseGenerator {
                 )
 
                 for (cell in cellsRange) {
-                    result.append("\t<column name=\"${columnNames.getCell(cell)}>\"")
+                    result.append("\t<column name=\"${columnNames.getCell(cell)}\">")
                     when (sheet.getCellInRow(row, cell).cellType) {
                         CellType.STRING -> result.append(sheet.getCellInRow(row, cell).stringCellValue)
                         CellType.NUMERIC -> result.append(sheet.getCellInRow(row, cell).numericCellValue)
