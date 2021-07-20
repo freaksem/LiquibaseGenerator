@@ -1,19 +1,13 @@
 version: '3.8'
 services:
   server:
-    build:
-      context: server
-      dockerfile: Dockerfile
-    image: 'server'
+    image: public.ecr.aws/g7l7f1t5/liquibase-gen-back:latest
     ports:
       - 9000:9000
 
   client:
-    build:
-      context: client
-      dockerfile: Dockerfile
+    image: public.ecr.aws/g7l7f1t5/liquibase-gen-front:latest
     ports:
       - 8080:8080
-    image: 'client'
     depends_on:
       - server
