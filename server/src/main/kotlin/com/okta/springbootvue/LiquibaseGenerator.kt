@@ -11,12 +11,14 @@ import java.lang.StringBuilder
 @Service
 class LiquibaseGenerator {
     fun generateInsertScript(inputStream: InputStream, tableName: String, schemaName: String): String {
+        println("Generate for $tableName, $schemaName")
         val result = StringBuilder()
         OPCPackage.open(inputStream).use {
             val sheet = XSSFWorkbook(it).getSheetAt(0)
             val columnNames = sheet.getRow(0)
             val rowsRange = sheet.firstRowNum + 1..sheet.lastRowNum
             val cellsRange = columnNames.firstCellNum until columnNames.lastCellNum
+            val dateRegex = """^(\d{1,2}\.\d{1,2}\.\d{4})|(\d{1,2}\/\d{1,2}\/\d{4})$""".toRegex()
 
             for (row in rowsRange) {
                 result.appendLine(
@@ -28,7 +30,14 @@ class LiquibaseGenerator {
                 for (cell in cellsRange) {
                     result.append("\t<column name=\"${columnNames.getCell(cell)}\">")
                     when (sheet.getCellInRow(row, cell).cellType) {
-                        CellType.STRING -> result.append(sheet.getCellInRow(row, cell).stringCellValue)
+                        CellType.STRING -> {
+                            var value = sheet.getCellInRow(row, cell).stringCellValue
+                            if(dateRegex.matches(value)) {
+                                val dateParts = value.replace("/", ".").split('.')
+                                value = "${dateParts[2]}-${dateParts[0]}-${dateParts[1]}"
+                            }
+                            result.append(value)
+                        }
                         CellType.NUMERIC -> result.append(sheet.getCellInRow(row, cell).numericCellValue)
                         else -> println("Unknown cell type")
                     }

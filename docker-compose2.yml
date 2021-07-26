@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  server:
+    build:
+      context: server
+      dockerfile: Dockerfile
+    image: 'server'
+    ports:
+      - 9000:9000
+
+  client:
+    build:
+      context: client
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    image: 'client'
+    depends_on:
+      - server
