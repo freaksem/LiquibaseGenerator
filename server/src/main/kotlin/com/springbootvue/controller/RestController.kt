@@ -1,5 +1,6 @@
-package com.okta.springbootvue
+package com.springbootvue.controller
 
+import com.springbootvue.service.LiquibaseGenerator
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController

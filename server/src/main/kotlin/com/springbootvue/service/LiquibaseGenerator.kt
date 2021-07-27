@@ -1,4 +1,4 @@
-package com.okta.springbootvue
+package com.springbootvue.service
 
 import org.apache.poi.openxml4j.opc.OPCPackage
 import org.apache.poi.ss.usermodel.CellType
@@ -31,7 +31,7 @@ class LiquibaseGenerator {
                     result.append("\t<column name=\"${columnNames.getCell(cell)}\">")
                     when (sheet.getCellInRow(row, cell).cellType) {
                         CellType.STRING -> {
-                            var value = sheet.getCellInRow(row, cell).stringCellValue
+                            var value = sheet.getCellInRow(row, cell).stringCellValue.trim()
                             if(dateRegex.matches(value)) {
                                 val dateParts = value.replace("/", ".").split('.')
                                 value = "${dateParts[2]}-${dateParts[0]}-${dateParts[1]}"
