@@ -34,7 +34,10 @@ class LiquibaseGenerator {
                             var value = sheet.getCellInRow(row, cell).stringCellValue.trim()
                             if(dateRegex.matches(value)) {
                                 val dateParts = value.replace("/", ".").split('.')
-                                value = "${dateParts[2]}-${dateParts[0]}-${dateParts[1]}"
+                                val month = if (dateParts[0].length == 1)
+                                    "0${dateParts[0]}"
+                                else dateParts[0]
+                                value = "${dateParts[2]}-$month-${dateParts[1]}"
                             }
                             result.append(value)
                         }
