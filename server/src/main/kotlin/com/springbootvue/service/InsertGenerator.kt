@@ -9,7 +9,7 @@ import java.io.InputStream
 import java.lang.StringBuilder
 
 @Service
-class LiquibaseGenerator {
+class InsertGenerator {
     fun generateInsertScript(inputStream: InputStream, tableName: String, schemaName: String): String {
         println("Generate for $tableName, $schemaName")
         val result = StringBuilder()

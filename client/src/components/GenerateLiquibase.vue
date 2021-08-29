@@ -1,11 +1,22 @@
 <template>
   <div>
     <h1 class="title">Generate liquibase</h1>
-    <section class="generateLiquibaseApp">
+    <section class="GenerateApp">
       <div>
         <div>
           <div><h2 class="title">Заполните поля и прикрепите файл с данными:</h2></div>
-          <div class="form-group" :class="{ 'form-group--error': $v.tableName.$error }">
+          <div class="form-group">
+            <label class="form__label">Что будем делать?</label>
+            <div>
+              <input type="radio" value="/generateInsert" name="Insert" @change="selectAction($event.target.value)" v-model="action" id="insert"/>
+              <label for="insert">Insert</label>
+            </div>
+            <div>
+              <input type="radio" value="/generateUpdate" name="Update" @change="selectAction($event.target.value)" v-model="action" id="update"/>
+              <label for="update">Update</label>
+            </div>
+          </div>
+          <div v-if="action !== ''" class="form-group" :class="{ 'form-group--error': $v.tableName.$error }">
             <label class="form__label">Название таблицы</label>
             <div>
               <input class="form__input" v-model.trim="tableName" @input="setTableName($event.target.value)"/>
@@ -27,7 +38,7 @@
           </label>
           <br/>
           <br/>
-          <button v-if="submitStatus !== 'ERROR' && selectedFiles !== null" @click="generateLiquibase">
+          <button v-if="submitStatus !== 'ERROR' && selectedFiles !== null" @click="GenerateLiquibase">
             Загрузить
           </button>
         </div>
@@ -49,6 +60,7 @@ const GenerateLiquibase = {
   // app initial state
   data: function () {
     return {
+      action: '',
       selectedFiles: null,
       currentFile: undefined,
       tableName: '',
@@ -66,12 +78,15 @@ const GenerateLiquibase = {
   },
 
   methods: {
-    generateLiquibase: function () {
+    GenerateLiquibase: function () {
       this.currentFile = this.selectedFiles.item(0);
-      api.upload(this.currentFile, this.tableName, this.schemaName)
+      api.upload(this.currentFile, this.tableName, this.schemaName, this.action)
     },
     selectFile() {
       this.selectedFiles = this.$refs.file.files;
+    },
+    selectAction(value) {
+      this.action = value
     },
 
     setTableName(value) {

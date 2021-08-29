@@ -8,14 +8,14 @@ const instance = axios.create({
 });
 
 export default {
-  upload(file, tableName, schemaName) {
+  upload(file, tableName, schemaName, url) {
     let formData = new FormData();
 
     formData.append("file", file);
     formData.append("tableName", tableName);
     formData.append("schemaName", schemaName);
 
-    return instance.post("/generateLiquibase", formData, {
+    return instance.post(url, formData, {
       headers: {
         "Content-Type": "multipart/form-data"
       }
