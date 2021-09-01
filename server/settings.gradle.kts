@@ -1,1 +1,1 @@
-rootProject.name = "springbootvue"
+rootProject.name = "liquibasegenerator"

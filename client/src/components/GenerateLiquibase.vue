@@ -50,6 +50,7 @@
 <script>
 import api from '../Api';
 import {required} from 'vuelidate/lib/validators'
+import Vue from "vue";
 
 
 // app Vue instance
@@ -79,6 +80,10 @@ const GenerateLiquibase = {
 
   methods: {
     GenerateLiquibase: function () {
+      Vue.$log.debug("Selected action: " + this.action)
+      Vue.$log.debug("Table name: " + this.tableName)
+      Vue.$log.debug("Schema name: " + this.schemaName)
+
       this.currentFile = this.selectedFiles.item(0);
       api.upload(this.currentFile, this.tableName, this.schemaName, this.action)
     },
@@ -86,7 +91,7 @@ const GenerateLiquibase = {
       this.selectedFiles = this.$refs.file.files;
     },
     selectAction(value) {
-      this.action = value
+      this.action = value;
     },
 
     setTableName(value) {

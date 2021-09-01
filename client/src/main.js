@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuelidate from 'vuelidate'
-Vue.use(Vuelidate)
 import App from './App'
 
 Vue.config.productionTip = false
@@ -12,12 +11,13 @@ const options = {
   logLevel : 'debug',
   stringifyArguments : false,
   showLogLevel : true,
-  showMethodName : false,
+  showMethodName : true,
   separator: '|',
   showConsoleColors: true
 };
 
 Vue.use(VueLogger, options);
+Vue.use(Vuelidate)
 
 /* eslint-disable no-new */
 new Vue({

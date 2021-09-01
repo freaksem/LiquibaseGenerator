@@ -1,14 +1,12 @@
-package com.springbootvue.service
+package com.ktor.service
 
 import org.apache.poi.openxml4j.opc.OPCPackage
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.xssf.usermodel.XSSFCell
 import org.apache.poi.xssf.usermodel.XSSFSheet
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import org.springframework.stereotype.Service
 import java.io.InputStream
 
-@Service
 class UpdateGenerator {
     /**
      * excel формат: первая колонка первая строка - ключ, по которому будут применяться изменения, вертикальные ячейки первой колонки - значения ключа

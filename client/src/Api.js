@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const SERVER_URL = 'http://localhost:9000';
+const SERVER_URL = 'http://127.0.0.1:9000';
 
 const instance = axios.create({
   baseURL: SERVER_URL,
@@ -10,12 +10,9 @@ const instance = axios.create({
 export default {
   upload(file, tableName, schemaName, url) {
     let formData = new FormData();
-
     formData.append("file", file);
-    formData.append("tableName", tableName);
-    formData.append("schemaName", schemaName);
 
-    return instance.post(url, formData, {
+    return instance.post(url+"?tableName="+tableName+"&schemaName="+schemaName, formData, {
       headers: {
         "Content-Type": "multipart/form-data"
       }
