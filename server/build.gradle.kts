@@ -5,8 +5,9 @@ val logback_version: String by project
 plugins {
 	application
 	kotlin("jvm") version "1.5.21"
-	kotlin("plugin.spring") version "1.5.20"
 	kotlin("plugin.jpa") version "1.5.20"
+
+	kotlin("plugin.serialization") version "1.5.21"
 }
 
 group = "com.ktor"
@@ -28,6 +29,7 @@ dependencies {
 	implementation("io.ktor:ktor-server-netty:$ktor_version")
 	implementation("io.ktor:ktor-serialization:$ktor_version")
 	implementation("ch.qos.logback:logback-classic:$logback_version")
+	implementation("io.arrow-kt:arrow-core:0.13.2")
 }
 
 tasks.withType<Test> {

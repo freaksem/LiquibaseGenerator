@@ -1,5 +1,6 @@
 package com.ktor.service
 
+import com.ktor.utils.Regex.Companion.DATE_REGEX
 import org.apache.poi.openxml4j.opc.OPCPackage
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.xssf.usermodel.XSSFCell
@@ -47,12 +48,11 @@ class UpdateGenerator {
 
     private fun getValueFromCell(cellValue: XSSFCell): String {
         var value = ""
-        val dateRegex = """^(\d{1,2}\.\d{1,2}\.\d{4})|(\d{1,2}\/\d{1,2}\/\d{4})$""".toRegex()
 
         when (cellValue.cellType) {
             CellType.STRING -> {
                 value = cellValue.stringCellValue.trim()
-                if (dateRegex.matches(value)) {
+                if (DATE_REGEX.matches(value)) {
                     val dateParts = value.replace("/", ".").split('.')
                     val month = if (dateParts[0].length == 1)
                         "0${dateParts[0]}"

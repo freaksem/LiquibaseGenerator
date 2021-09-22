@@ -17,12 +17,22 @@ export default {
         "Content-Type": "multipart/form-data"
       }
     }).then(response => {
-      let blob = new Blob([response.data], { type: "text/plain; charset=utf-8" })
+      if (response.data instanceof Array) {
+        console.log(response.data)
+        return response.data
+      }
+      else {
+        let blob = new Blob([response.data], { type: "text/plain; charset=utf-8" })
 
-      let link = document.createElement('a')
-      link.href = window.URL.createObjectURL(blob)
-      link.download = 'result.txt'
-      link.click()
+        let link = document.createElement('a')
+        link.href = window.URL.createObjectURL(blob)
+        link.download = 'result.txt'
+        link.click()
+      }
+    }).catch( error => {
+      console.log(error)
+      throw error
+      // console.log(error.response.data)
     });
   }
 }

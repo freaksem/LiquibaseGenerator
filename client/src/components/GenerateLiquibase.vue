@@ -21,24 +21,24 @@
             <div>
               <input class="form__input" v-model.trim="tableName" @input="setTableName($event.target.value)"/>
             </div>
-            <div class="error2" v-if="!$v.tableName.required && $v.tableName.$dirty">Заполни поле</div>
+            <div class="error2" v-if="$v.tableName.$dirty">Заполни поле</div>
           </div>
-          <div v-if="tableName !== ''" class="form-group" :class="{ 'form-group--error': $v.schemaName.$error }">
+          <div v-if="action !== ''" class="form-group" :class="{ 'form-group--error': $v.schemaName.$error }">
             <label class="form__label">Название схемы</label>
             <div>
               <input class="form__input" v-model.trim="schemaName" @input="setSchemaName($event.target.value)"/>
             </div>
-            <div class="error2" v-if="!$v.schemaName.required && $v.schemaName.$dirty">Заполни поле</div>
+            <div class="error2" v-if="$v.schemaName.$dirty">Заполни поле</div>
           </div>
         </div>
         <br />
-        <div v-if="tableName !== '' && schemaName !== ''">
+        <div>
           <label>
             <input type="file" ref="file" @change="selectFile"/>
           </label>
           <br/>
           <br/>
-          <button v-if="submitStatus !== 'ERROR' && selectedFiles !== null" @click="GenerateLiquibase">
+          <button @click="GenerateLiquibase">
             Загрузить
           </button>
         </div>
@@ -79,13 +79,25 @@ const GenerateLiquibase = {
   },
 
   methods: {
-    GenerateLiquibase: function () {
+    GenerateLiquibase: async function () {
       Vue.$log.debug("Selected action: " + this.action)
       Vue.$log.debug("Table name: " + this.tableName)
       Vue.$log.debug("Schema name: " + this.schemaName)
 
       this.currentFile = this.selectedFiles.item(0);
-      api.upload(this.currentFile, this.tableName, this.schemaName, this.action)
+      let result = await api.upload(this.currentFile, this.tableName, this.schemaName, this.action);
+      let _this = this
+      this.$v.$reset();
+      if (result instanceof Array) {
+        result.forEach(function(item) {
+          if(item[1].fieldName === "tableName") {
+            _this.$v.tableName.$touch()
+          }
+          if(item[1].fieldName === "schemaName") {
+            _this.$v.schemaName.$touch()
+          }
+        });
+      }
     },
     selectFile() {
       this.selectedFiles = this.$refs.file.files;

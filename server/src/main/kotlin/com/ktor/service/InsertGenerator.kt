@@ -1,5 +1,6 @@
 package com.ktor.service
 
+import com.ktor.utils.Regex.Companion.DATE_REGEX
 import org.apache.poi.openxml4j.opc.OPCPackage
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.xssf.usermodel.XSSFSheet
@@ -16,7 +17,6 @@ class InsertGenerator {
             val columnNames = sheet.getRow(0)
             val rowsRange = sheet.firstRowNum + 1..sheet.lastRowNum
             val cellsRange = columnNames.firstCellNum until columnNames.lastCellNum
-            val dateRegex = """^(\d{1,2}\.\d{1,2}\.\d{4})|(\d{1,2}\/\d{1,2}\/\d{4})$""".toRegex()
 
             for (row in rowsRange) {
                 result.appendLine(
@@ -30,7 +30,7 @@ class InsertGenerator {
                     when (sheet.getCellInRow(row, cell).cellType) {
                         CellType.STRING -> {
                             var value = sheet.getCellInRow(row, cell).stringCellValue.trim()
-                            if(dateRegex.matches(value)) {
+                            if(DATE_REGEX.matches(value)) {
                                 val dateParts = value.replace("/", ".").split('.')
                                 val month = if (dateParts[0].length == 1)
                                     "0${dateParts[0]}"
