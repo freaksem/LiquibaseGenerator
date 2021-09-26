@@ -19,36 +19,44 @@ class InsertGenerator {
             val dateRegex = """^(\d{1,2}\.\d{1,2}\.\d{4})|(\d{1,2}\/\d{1,2}\/\d{4})$""".toRegex()
 
             for (row in rowsRange) {
-                result.appendLine(
+                if(sheet.getCellInRow(row, 0) != null) {
+                    result.appendLine(
                         """
                             <insert tableName="$tableName" schemaName="$schemaName">
                         """.trimIndent()
-                )
+                    )
 
-                for (cell in cellsRange) {
-                    result.append("\t<column name=\"${columnNames.getCell(cell)}\">")
-                    when (sheet.getCellInRow(row, cell).cellType) {
-                        CellType.STRING -> {
-                            var value = sheet.getCellInRow(row, cell).stringCellValue.trim()
-                            if(dateRegex.matches(value)) {
-                                val dateParts = value.replace("/", ".").split('.')
-                                val month = if (dateParts[0].length == 1)
-                                    "0${dateParts[0]}"
-                                else dateParts[0]
-                                value = "${dateParts[2]}-$month-${dateParts[1]}"
+                    for (cell in cellsRange) {
+                        sheet.getCellInRow(row, cell)?.let { existingCell ->
+                            result.append("\t<column name=\"${columnNames.getCell(cell)}\">")
+                            when (existingCell.cellType) {
+                                CellType.STRING -> {
+                                    var value = sheet.getCellInRow(row, cell).stringCellValue.trim()
+                                    if(dateRegex.matches(value)) {
+                                        val dateParts = value.replace("/", ".").split('.')
+                                        val month = prepareDate(dateParts[0])
+                                        val day = prepareDate(dateParts[2])
+                                        value = "${dateParts[2]}-$month-$day"
+                                    }
+                                    result.append(value)
+                                }
+                                CellType.NUMERIC -> result.append(sheet.getCellInRow(row, cell).numericCellValue)
+                                else -> println("Unknown cell type")
                             }
-                            result.append(value)
-                        }
-                        CellType.NUMERIC -> result.append(sheet.getCellInRow(row, cell).numericCellValue)
-                        else -> println("Unknown cell type")
+                            result.appendLine("</column>")
+                        } ?: break
                     }
-                    result.appendLine("</column>")
+                    result.appendLine("</insert>")
                 }
-                result.appendLine("</insert>")
             }
         }
         return result.toString()
     }
+
+    private fun prepareDate(datePart: String) =
+        if (datePart.length == 1)
+            "0$datePart"
+        else datePart
 
     private fun XSSFSheet.getCellInRow(row: Int, cell: Int) = this.getRow(row).getCell(cell)
 }
